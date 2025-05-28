@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class OutboundOrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long outboundItemId;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "outbound_id")

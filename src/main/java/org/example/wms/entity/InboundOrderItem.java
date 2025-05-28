@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class InboundOrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long inboundItemId;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "inbound_id")
@@ -23,7 +23,6 @@ public class InboundOrderItem {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    private Integer expectedQuantity;
-    private Integer receivedQuantity = 0;
+    private Integer quantity = 0;
 
 }

@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class Warehouse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long warehouseId;
+    private Long id;
 
     private String name;
     private String address;

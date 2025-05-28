@@ -5,8 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "inbound_orders")
@@ -16,12 +16,10 @@ import java.time.LocalDateTime;
 public class InboundOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long inboundId;
+    private Long id;
 
-    private String referenceNo;
-    private String supplierName;
-    private String status;
-    private LocalDate expectedDate;
+    @OneToMany(mappedBy = "inboundOrder", cascade = CascadeType.ALL)
+    private List<InboundOrderItem> items;
 
     @ManyToOne
     @JoinColumn(name = "warehouse_id")
@@ -29,7 +27,7 @@ public class InboundOrder {
 
     @ManyToOne
     @JoinColumn(name = "created_by")
-    private User createdBy;
+    private User user;
 
     private LocalDateTime createdAt = LocalDateTime.now();
 }
