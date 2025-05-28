@@ -7,7 +7,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update  # use 'validate' in production, 'create' for fresh schema
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
@@ -20,11 +20,14 @@ spring:
 
 server:
   port: 8080
+  servlet:
+    context-path: /api
 
 logging:
   file:
-    name: logs/wms-application.log  # logs directory relative to your project root
+    name: logs/wms-application.log
   level:
     root: INFO
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.springframework.security: DEBUG
