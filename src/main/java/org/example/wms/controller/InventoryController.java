@@ -2,6 +2,7 @@ package org.example.wms.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.wms.dto.InventoryDTO;
+import org.example.wms.dto.general.ApiResponse;
 import org.example.wms.service.InventoryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,21 +16,19 @@ public class InventoryController {
     private final InventoryService inventoryService;
 
     @GetMapping
-    public ResponseEntity<List<InventoryDTO>> getAllInventory() {
+    public ResponseEntity<ApiResponse<List<InventoryDTO>>> getAllInventory() {
         return ResponseEntity.ok(inventoryService.getAllInventory());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<InventoryDTO> getInventoryById(@PathVariable Long id) {
-        return inventoryService.getInventoryById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<ApiResponse<InventoryDTO>> getInventoryById(@PathVariable Long id) {
+        ApiResponse<InventoryDTO> resp = inventoryService.getInventoryById(id);
+        return ResponseEntity.status(resp.getCode()).body(resp);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<InventoryDTO> updateInventoryQuantity(
-            @PathVariable Long id,
-            @RequestParam Integer quantity) {
-        return ResponseEntity.ok(inventoryService.updateInventoryQuantity(id, quantity));
+    public ResponseEntity<ApiResponse<InventoryDTO>> updateInventoryQuantity(@PathVariable Long id, @RequestParam Integer quantity) {
+        ApiResponse<InventoryDTO> resp = inventoryService.updateInventoryQuantity(id, quantity);
+        return ResponseEntity.status(resp.getCode()).body(resp);
     }
 }

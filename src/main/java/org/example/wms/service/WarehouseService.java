@@ -2,6 +2,7 @@ package org.example.wms.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.wms.dto.WarehouseDTO;
+import org.example.wms.dto.general.ApiResponse;
 import org.example.wms.entity.Warehouse;
 import org.example.wms.mapper.WarehouseMapper;
 import org.example.wms.repository.WarehouseRepository;
@@ -13,39 +14,42 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class WarehouseService {
-    private final WarehouseRepository warehouseRepository;
-    private final WarehouseMapper warehouseMapper;
+    private final WarehouseRepository repository;
+    private final WarehouseMapper mapper;
 
-    public List<WarehouseDTO> getAllWarehouses() {
-        return warehouseRepository.findAll().stream()
-                .map(warehouseMapper::toDTO)
-                .toList();
+    public ApiResponse<List<WarehouseDTO>> getAllWarehouses() {
+        return new ApiResponse<>(200, "SUCCESS", repository.findAll().stream()
+                .map(mapper::toDTO)
+                .toList());
     }
 
-    public WarehouseDTO createWarehouse(WarehouseDTO dto) {
-        Warehouse warehouse = warehouseMapper.toEntity(dto);
-        return warehouseMapper.toDTO(warehouseRepository.save(warehouse));
+    public ApiResponse<WarehouseDTO> createWarehouse(WarehouseDTO dto) {
+        return new ApiResponse<>(200, "SUCCESS", mapper.toDTO(repository.save(mapper.toEntity(dto))));
     }
 
-    public Optional<WarehouseDTO> getWarehouseById(Long id) {
-        return warehouseRepository.findById(id).map(warehouseMapper::toDTO);
+    public ApiResponse<WarehouseDTO> getWarehouseById(Long id) {
+        Optional<WarehouseDTO> optional = repository.findById(id).map(mapper::toDTO);
+        return optional.map(warehouseDTO -> new ApiResponse<>(200, "SUCCESS", warehouseDTO))
+                .orElseGet(() -> new ApiResponse<>(404, "NOT FOUND"));
     }
 
-    public Optional<WarehouseDTO> updateWarehouse(Long id, WarehouseDTO dto) {
-        return warehouseRepository.findById(id).map(existing -> {
+    public ApiResponse<WarehouseDTO> updateWarehouse(Long id, WarehouseDTO dto) {
+        Optional<WarehouseDTO> optional = repository.findById(id).map(existing -> {
             existing.setName(dto.getName());
             existing.setAddress(dto.getAddress());
-            Warehouse updated = warehouseRepository.save(existing);
-            return warehouseMapper.toDTO(updated);
+            Warehouse updated = repository.save(existing);
+            return mapper.toDTO(updated);
         });
+        return optional.map(warehouseDTO -> new ApiResponse<>(200, "SUCCESS", warehouseDTO))
+                .orElseGet(() -> new ApiResponse<>(404, "NOT FOUND"));
     }
 
-    public boolean deleteWarehouse(Long id) {
-        if (warehouseRepository.existsById(id)) {
-            warehouseRepository.deleteById(id);
-            return true;
+    public ApiResponse<Void> deleteWarehouse(Long id) {
+        if (repository.existsById(id)) {
+            repository.deleteById(id);
+            return new ApiResponse<>(200, "SUCCESS");
         }
-        return false;
+        return new ApiResponse<>(404, "NOT FOUND");
     }
 }
 

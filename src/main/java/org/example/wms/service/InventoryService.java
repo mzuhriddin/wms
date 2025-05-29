@@ -2,7 +2,7 @@ package org.example.wms.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.wms.dto.InventoryDTO;
-import org.example.wms.entity.Inventory;
+import org.example.wms.dto.general.ApiResponse;
 import org.example.wms.mapper.InventoryMapper;
 import org.example.wms.repository.InventoryRepository;
 import org.springframework.stereotype.Service;
@@ -14,24 +14,28 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class InventoryService {
-    private final InventoryRepository inventoryRepository;
-    private final InventoryMapper inventoryMapper;
+    private final InventoryRepository repository;
+    private final InventoryMapper mapper;
 
-    public List<InventoryDTO> getAllInventory() {
-        return inventoryRepository.findAll().stream()
-                .map(inventoryMapper::toDTO)
-                .toList();
+    public ApiResponse<List<InventoryDTO>> getAllInventory() {
+        return new ApiResponse<>(200, "SUCCESS", repository.findAll().stream()
+                .map(mapper::toDTO)
+                .toList());
     }
 
-    public Optional<InventoryDTO> getInventoryById(Long id) {
-        return inventoryRepository.findById(id)
-                .map(inventoryMapper::toDTO);
+    public ApiResponse<InventoryDTO> getInventoryById(Long id) {
+        return repository.findById(id).map(mapper::toDTO)
+                .map(inventoryDTO -> new ApiResponse<>(200, "SUCCESS", inventoryDTO))
+                .orElseGet(() -> new ApiResponse<>(404, "NOT FOUND"));
     }
 
-    public InventoryDTO updateInventoryQuantity(Long id, Integer quantity) {
-        Inventory inv = inventoryRepository.findById(id).orElseThrow();
-        inv.setQuantity(quantity);
-        inv.setLastUpdated(LocalDateTime.now());
-        return inventoryMapper.toDTO(inventoryRepository.save(inv));
+    public ApiResponse<InventoryDTO> updateInventoryQuantity(Long id, Integer quantity) {
+        Optional<InventoryDTO> optional = repository.findById(id).map(exiting -> {
+            exiting.setQuantity(quantity);
+            exiting.setLastUpdated(LocalDateTime.now());
+            return mapper.toDTO(repository.save(exiting));
+        });
+        return optional.map(dto -> new ApiResponse<>(200, "SUCCESS", dto))
+                .orElseGet(() -> new ApiResponse<>(404, "NOT FOUND"));
     }
 }

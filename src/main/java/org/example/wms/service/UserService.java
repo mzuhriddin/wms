@@ -2,6 +2,7 @@ package org.example.wms.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.wms.dto.UserDTO;
+import org.example.wms.dto.general.ApiResponse;
 import org.example.wms.entity.User;
 import org.example.wms.mapper.UserMapper;
 import org.example.wms.repository.UserRepository;
@@ -13,38 +14,41 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private final UserRepository userRepository;
-    private final UserMapper userMapper;
+    private final UserRepository repository;
+    private final UserMapper mapper;
 
-    public List<UserDTO> getAllUsers() {
-        return userRepository.findAll().stream()
-                .map(userMapper::toDTO)
-                .toList();
+    public ApiResponse<List<UserDTO>> getAllUsers() {
+        return new ApiResponse<>(200, "SUCCESS", repository.findAll().stream()
+                .map(mapper::toDTO)
+                .toList());
     }
 
-    public UserDTO createUser(UserDTO dto) {
-        User user = userMapper.toEntity(dto);
-        return userMapper.toDTO(userRepository.save(user));
+    public ApiResponse<UserDTO> createUser(UserDTO dto) {
+        return new ApiResponse<>(200, "SUCCESS", mapper.toDTO(repository.save(mapper.toEntity(dto))));
     }
 
-    public Optional<UserDTO> getUserById(Long id) {
-        return userRepository.findById(id).map(userMapper::toDTO);
+    public ApiResponse<UserDTO> getUserById(Long id) {
+        return repository.findById(id).map(mapper::toDTO)
+                .map(dto -> new ApiResponse<>(200, "SUCCESS", dto))
+                .orElseGet(() -> new ApiResponse<>(404, "NOT FOUND"));
     }
 
-    public Optional<UserDTO> updateUser(Long id, UserDTO dto) {
-        return userRepository.findById(id).map(existingUser -> {
+    public ApiResponse<UserDTO> updateUser(Long id, UserDTO dto) {
+        Optional<UserDTO> optional = repository.findById(id).map(existingUser -> {
             existingUser.setUsername(dto.getUsername());
             existingUser.setRole(dto.getRole());
-            User updatedUser = userRepository.save(existingUser);
-            return userMapper.toDTO(updatedUser);
+            User updatedUser = repository.save(existingUser);
+            return mapper.toDTO(updatedUser);
         });
+        return optional.map(user -> new ApiResponse<>(200, "SUCCESS", user))
+                .orElseGet(() -> new ApiResponse<>(404, "NOT FOUND"));
     }
 
-    public boolean deleteUser(Long id) {
-        if(userRepository.existsById(id)) {
-            userRepository.deleteById(id);
-            return true;
+    public ApiResponse<Void> deleteUser(Long id) {
+        if(repository.existsById(id)) {
+            repository.deleteById(id);
+            return new ApiResponse<>(200, "SUCCESS");
         }
-        return false;
+        return new ApiResponse<>(404, "NOT FOUND");
     }
 }
