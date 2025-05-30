@@ -1,16 +1,14 @@
 package org.example.wms.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.example.wms.dto.general.BaseDTO;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ProductDTO {
-    private Long id;
+public class ProductDTO extends BaseDTO {
     private String name;
     private String description;
     private String sku;

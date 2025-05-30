@@ -6,23 +6,23 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "outbound_order_items")
+@Table(name = "input_product")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OutboundOrderItem {
+public class InputProductEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "outbound_id")
-    private OutboundOrder outboundOrder;
+    @JoinColumn(name = "input_id")
+    private InputEntity inputEntity;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
-    private Product product;
+    private ProductEntity productEntity;
 
-    private Integer quantity;
+    private Integer quantity = 0;
 
 }

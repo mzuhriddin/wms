@@ -4,31 +4,33 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "inbound_orders")
+@Table(name = "input")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class InboundOrder {
+public class InputEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "inboundOrder", cascade = CascadeType.ALL)
-    private List<InboundOrderItem> items;
+    @OneToMany(mappedBy = "inputEntity", cascade = CascadeType.ALL)
+    private List<InputProductEntity> items;
 
     @ManyToOne
     @JoinColumn(name = "warehouse_id")
-    private Warehouse warehouse;
+    private WarehouseEntity warehouseEntity;
 
     @ManyToOne
     @JoinColumn(name = "created_by")
-    private User user;
+    private UserEntity userEntity;
 
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @CreationTimestamp
+    private LocalDateTime createdDate;
 }
 

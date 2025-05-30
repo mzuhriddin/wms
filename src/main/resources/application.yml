@@ -36,4 +36,5 @@ logging:
     org.springframework.security: DEBUG
 
 jwt:
+  secret: oN)*&@T<d(uf)9ROXGqTL\K>O&(4O£]:fgtUR;>41[74tpM-3h
   expiration: 86400000 # 1day

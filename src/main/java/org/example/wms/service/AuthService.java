@@ -22,7 +22,7 @@ public class AuthService {
         }
 
         String token = jwtUtil.generateToken(request.getUsername());
-        return new ApiResponse<>(200, "SUCCESS", new AuthResponseDTO(token));
+        return new ApiResponse<>(200, "SUCCESS", new AuthResponseDTO(token), 0);
     }
 
     private boolean validateUser(String username, String rawPassword) {

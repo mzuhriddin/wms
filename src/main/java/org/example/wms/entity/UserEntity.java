@@ -4,23 +4,25 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "products")
+@Table(name = "users")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Product {
+public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String sku;
-    private String name;
-    private String description;
-    private String unitOfMeasure;
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private String username;
+    private String passwordHash;
+    private String role;
+    private Boolean isActive = true;
+    @CreationTimestamp
+    private LocalDateTime createdDate;
 
 }

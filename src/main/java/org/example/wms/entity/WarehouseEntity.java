@@ -4,28 +4,23 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "inventory")
+@Table(name = "warehouses")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Inventory {
+public class WarehouseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
-
-    @ManyToOne
-    @JoinColumn(name = "warehouse_id")
-    private Warehouse warehouse;
-
-    private Integer quantity;
-    private LocalDateTime lastUpdated = LocalDateTime.now();
+    private String name;
+    private String address;
+    @CreationTimestamp
+    private LocalDateTime createdDate;
 
 }

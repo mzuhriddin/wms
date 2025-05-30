@@ -1,6 +1,5 @@
 package org.example.wms.dto;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OutboundOrderItemDTO {
+public class InputProductDTO {
     private Long productId;
     private String productName;
     private Integer quantity;

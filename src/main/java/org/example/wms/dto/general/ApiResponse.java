@@ -11,6 +11,7 @@ public class ApiResponse<T> {
     private int code;
     private String message;
     private T data;
+    private long total;
 
     public ApiResponse(int code, String message) {
         this.code = code;
