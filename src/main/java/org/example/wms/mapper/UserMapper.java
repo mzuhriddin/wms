@@ -11,6 +11,7 @@ public interface UserMapper extends BaseMapper<UserEntity, UserDTO> {
     default UserDTO toDTO(UserEntity userEntity){
         UserDTO userDTO = new UserDTO();
         userDTO.setId(userEntity.getId());
+        userDTO.setName(userEntity.getName());
         userDTO.setUsername(userEntity.getUsername());
         userDTO.setRole(userEntity.getRole());
         userDTO.setCreatedDate(userEntity.getCreatedDate());
