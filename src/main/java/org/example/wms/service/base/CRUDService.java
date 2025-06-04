@@ -23,8 +23,13 @@ public abstract class CRUDService<R extends JpaRepository<E, Long>, E, D extends
     }
 
     public ApiResponse<List<D>> getAll(PaginationDTO pagination) {
-        PageRequest pageRequest = PageRequest.of(pagination.getPage() - 1, pagination.getSize());
-        pageRequest.withSort(Boolean.TRUE.equals(pagination.getDescending()) ? Sort.Direction.DESC : Sort.Direction.ASC, pagination.getSort());
+        PageRequest pageRequest;
+        if (pagination.getPage() != 0 && pagination.getSize() != 0) {
+            pageRequest = PageRequest.of(pagination.getPage() - 1, pagination.getSize());
+            pageRequest.withSort(Boolean.TRUE.equals(pagination.getDescending()) ? Sort.Direction.DESC : Sort.Direction.ASC, pagination.getSort());
+        } else {
+            pageRequest = PageRequest.of(0, Integer.MAX_VALUE);
+        }
 
         List<D> list = repository.findAll(pageRequest).stream()
                 .map(mapper::toDTO)
