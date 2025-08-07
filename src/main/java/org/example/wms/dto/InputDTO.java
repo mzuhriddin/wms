@@ -13,6 +13,7 @@ import java.util.List;
 @Builder
 public class InputDTO extends BaseDTO {
     private LocalDateTime createdDate;
+    private Long warehouseId;
     private Long userId;
     private List<InputProductDTO> items;
 
